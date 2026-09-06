@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { PROJECTS } from '../data/websiteData';
+import { CLIENT_PROJECT_CATEGORIES } from '../data/clientProjectsData';
 import { ProjectItem } from '../types';
-import { ArrowRight, MapPin, X, Building } from 'lucide-react';
+import { ArrowRight, MapPin, X, Building, CheckCircle2 } from 'lucide-react';
 
 interface ProjectsSectionProps {
   onOpenQuoteModal: () => void;
@@ -9,6 +10,7 @@ interface ProjectsSectionProps {
 
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onOpenQuoteModal }) => {
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
+  const [activeTabId, setActiveTabId] = useState<string>('institutional');
 
   // Close modal on Escape key and handle body scroll lock
   useEffect(() => {
@@ -200,6 +202,102 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onOpenQuoteMod
                 </div>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* COMPLETED CLIENT PROJECTS DIRECTORY (DIRECTLY FROM MASTERCUBICLE.IN) */}
+        {/* ========================================================================= */}
+        <div className="mt-20 pt-16 border-t border-white/10">
+          <div className="max-w-3xl mb-8 space-y-2">
+            <div className="flex items-center space-x-3 text-xs uppercase tracking-[0.25em] text-[#c5a880] font-semibold">
+              <span className="w-8 h-px bg-[#c5a880]"></span>
+              <span>Client Execution Portfolio</span>
+            </div>
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-white font-['Manrope'] tracking-tight">
+              Completed Projects by Sector
+            </h3>
+            <p className="text-gray-400 text-sm font-light">
+              Verified installations across India's institutional, sports, hospitality, and commercial infrastructure.
+            </p>
+          </div>
+
+          {/* Category Tabs: INSTITUTIONAL PROJECT, HOSPITALITY PROJECT, SPORTS PROJECT, COMMERCIAL PROJECT */}
+          <div className="border-b border-white/10 flex flex-wrap gap-2 sm:gap-6 overflow-x-auto no-scrollbar">
+            {CLIENT_PROJECT_CATEGORIES.map((category) => {
+              const isActive = activeTabId === category.id;
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => setActiveTabId(category.id)}
+                  className={`pb-4 px-2 text-xs sm:text-sm font-bold uppercase tracking-[0.15em] transition-all relative whitespace-nowrap cursor-pointer ${
+                    isActive
+                      ? 'text-white'
+                      : 'text-gray-400 hover:text-gray-200'
+                  }`}
+                >
+                  <span>{category.title}</span>
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#f97316] shadow-[0_0_12px_rgba(249,115,22,0.6)]"></span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Tab Content: Clean List with Project Name and Orange Location Tag */}
+          <div className="mt-8 bg-[#0b0e13]/60 border border-white/10 p-6 sm:p-10 backdrop-blur-sm rounded-sm">
+            {(() => {
+              const activeCategory = CLIENT_PROJECT_CATEGORIES.find((c) => c.id === activeTabId) || CLIENT_PROJECT_CATEGORIES[0];
+              return (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                    <div className="text-xs font-mono uppercase tracking-wider text-gray-400">
+                      {activeCategory.countLabel}
+                    </div>
+                    <span className="text-[11px] font-mono text-[#f97316] bg-[#f97316]/10 border border-[#f97316]/20 px-2.5 py-1 rounded">
+                      Commercial Executions
+                    </span>
+                  </div>
+
+                  {/* Responsive Grid of Project Entries */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                    {activeCategory.projects.map((project, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-baseline space-x-3 group py-2 border-b border-white/5 hover:border-white/15 transition-colors"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#f97316] shrink-0 mt-1.5"></span>
+                        <div className="flex-1 min-w-0 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                          <span className="text-base sm:text-lg font-medium text-gray-200 group-hover:text-white transition-colors">
+                            {project.name}
+                          </span>
+                          <span className="text-xs sm:text-sm font-semibold text-[#f97316] font-mono shrink-0">
+                            Location: <span className="text-[#fdba74]">{project.location}</span>
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Footnote with Direct Action */}
+                  <div className="pt-6 mt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="text-xs text-gray-400 font-light flex items-center space-x-2">
+                      <CheckCircle2 className="w-4 h-4 text-[#c5a880] shrink-0" />
+                      <span>Standardized 12mm & 18mm compact phenolic boards deployed across all client sites.</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={onOpenQuoteModal}
+                      className="text-xs font-mono uppercase tracking-widest font-bold text-[#c5a880] hover:text-white transition-colors inline-flex items-center space-x-1.5 shrink-0"
+                    >
+                      <span>Inquire About Reference Sites</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
 

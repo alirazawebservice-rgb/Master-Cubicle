@@ -64,21 +64,53 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuoteModal }) => {
           </div>
         </div>
 
-        {/* Bottom Bar: Compact Metadata + Direct Peek Prompt to Next Section */}
-        <div className="mt-10 sm:mt-12 pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-400 gap-3">
-          <div className="flex items-center space-x-3 text-[11px] sm:text-xs">
-            <span className="text-[#c5a880] font-mono font-semibold">100% MOISTURE PROOF</span>
-            <span className="text-white/20">|</span>
-            <span className="text-gray-300 font-light">Grade 304 Hardware • Turnkey Dry Installation</span>
-          </div>
+        {/* Statistical Achievements Summary (Directly from mastercubicle.in) */}
+        <div className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10">
+          <div className="bg-[#0b0e14]/90 sm:bg-white/[0.03] backdrop-blur-md border border-white/10 py-6 px-4 sm:px-8 rounded-sm shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 sm:gap-y-0 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
+              {/* Stat 1: 850 CLIENTS */}
+              <div className="flex flex-col items-center justify-center text-center px-2 sm:px-4 py-2 sm:py-0">
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#f97316] font-['Manrope'] tracking-tight leading-none">
+                  850
+                </div>
+                <div className="mt-2 text-[11px] sm:text-xs font-mono uppercase tracking-[0.25em] text-gray-300 font-medium">
+                  CLIENTS
+                </div>
+              </div>
 
-          <a
-            href="#intro"
-            className="inline-flex items-center space-x-1.5 text-xs text-gray-300 hover:text-white transition-colors group"
-          >
-            <span className="text-[11px] uppercase tracking-wider font-mono text-[#c5a880]">See company profile below</span>
-            <ChevronDown className="w-3.5 h-3.5 text-[#c5a880] transition-transform group-hover:translate-y-0.5" />
-          </a>
+              {/* Stat 2: 1,000+ PROJECTS */}
+              <div className="flex flex-col items-center justify-center text-center px-2 sm:px-4 py-3 sm:py-0">
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#f97316] font-['Manrope'] tracking-tight leading-none flex items-baseline justify-center">
+                  <span>1,000</span>
+                  <span className="text-2xl sm:text-3xl lg:text-4xl font-bold ml-0.5">+</span>
+                </div>
+                <div className="mt-2 text-[11px] sm:text-xs font-mono uppercase tracking-[0.25em] text-gray-300 font-medium">
+                  PROJECTS
+                </div>
+              </div>
+
+              {/* Stat 3: 20 REPAIRING */}
+              <div className="flex flex-col items-center justify-center text-center px-2 sm:px-4 py-3 sm:py-0">
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#f97316] font-['Manrope'] tracking-tight leading-none">
+                  20
+                </div>
+                <div className="mt-2 text-[11px] sm:text-xs font-mono uppercase tracking-[0.25em] text-gray-300 font-medium">
+                  REPAIRING
+                </div>
+              </div>
+
+              {/* Stat 4: 100+ AWARDS */}
+              <div className="flex flex-col items-center justify-center text-center px-2 sm:px-4 py-3 sm:py-0">
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#f97316] font-['Manrope'] tracking-tight leading-none flex items-baseline justify-center">
+                  <span>100</span>
+                  <span className="text-2xl sm:text-3xl lg:text-4xl font-bold ml-0.5">+</span>
+                </div>
+                <div className="mt-2 text-[11px] sm:text-xs font-mono uppercase tracking-[0.25em] text-gray-300 font-medium">
+                  AWARDS
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
