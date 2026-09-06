@@ -65,7 +65,7 @@ export interface ProjectItem {
 export interface GalleryItem {
   id: string;
   title: string;
-  category: 'Toilet Cubicles' | 'Urinal Partitions' | 'Changing Rooms & Lockers' | 'Hardware Details';
+  category: 'Toilet Cubicles' | 'Urinal Partitions' | 'Shower Cubicles' | 'Changing Rooms & Lockers' | 'Hardware Details';
   imageUrl: string;
   location?: string;
   caption: string;

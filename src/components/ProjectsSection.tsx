@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PROJECTS } from '../data/websiteData';
 import { ProjectItem } from '../types';
 import { ArrowRight, MapPin, X, Building } from 'lucide-react';
@@ -9,6 +9,25 @@ interface ProjectsSectionProps {
 
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onOpenQuoteModal }) => {
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
+
+  // Close modal on Escape key and handle body scroll lock
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedProject(null);
+      }
+    };
+
+    if (selectedProject) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [selectedProject]);
 
   const heroProject = PROJECTS[0];
   const remainingProjects = PROJECTS.slice(1);
@@ -186,23 +205,35 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onOpenQuoteMod
 
         {/* Project Case Study Lightbox / Modal */}
         {selectedProject && (
-          <div className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-200">
-            <div className="relative w-full max-w-4xl bg-[#11141a] border border-white/10 rounded-none shadow-2xl overflow-hidden my-6">
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#090b0e]">
-                <div className="flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-[#c5a880]">
-                  <Building className="w-4 h-4" />
-                  <span>Commercial Case Study: {selectedProject.client}</span>
+          <div
+            onClick={() => setSelectedProject(null)}
+            className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 lg:p-8 animate-in fade-in duration-200 cursor-pointer"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="case-study-title"
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-4xl bg-[#11141a] border border-white/10 rounded-sm shadow-2xl overflow-hidden my-4 sm:my-6 cursor-default max-h-[92vh] flex flex-col"
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-white/10 bg-[#090b0e] shrink-0">
+                <div className="flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-[#c5a880] truncate pr-2">
+                  <Building className="w-4 h-4 shrink-0" />
+                  <span className="truncate">Commercial Case Study: {selectedProject.client}</span>
                 </div>
                 <button
                   onClick={() => setSelectedProject(null)}
-                  className="p-1 text-gray-400 hover:text-white"
+                  className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-sm transition-colors shrink-0"
+                  aria-label="Close modal"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="p-6 sm:p-10 space-y-6">
-                <div className="aspect-[16/9] overflow-hidden bg-[#161a22]">
+              {/* Modal Scrollable Content */}
+              <div className="p-5 sm:p-8 lg:p-10 space-y-6 overflow-y-auto">
+                <div className="aspect-[16/9] overflow-hidden bg-[#161a22] rounded-sm">
                   <img
                     src={selectedProject.imageUrl}
                     alt={selectedProject.title}
@@ -211,7 +242,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onOpenQuoteMod
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-['Manrope']">
+                  <h3 id="case-study-title" className="text-xl sm:text-3xl font-extrabold text-white font-['Manrope']">
                     {selectedProject.title}
                   </h3>
                   <p className="text-sm sm:text-base text-gray-300 font-light leading-relaxed">
@@ -238,13 +269,22 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onOpenQuoteMod
                   </div>
                 </div>
 
-                <div className="pt-2 flex justify-end">
+                {/* Bottom Actions - Highly Mobile Friendly */}
+                <div className="pt-2 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3">
                   <button
+                    type="button"
+                    onClick={() => setSelectedProject(null)}
+                    className="px-6 py-3 border border-white/15 text-gray-300 hover:text-white text-xs uppercase tracking-[0.15em] font-semibold hover:bg-white/5 transition-colors text-center"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => {
                       setSelectedProject(null);
                       onOpenQuoteModal();
                     }}
-                    className="px-6 py-3 bg-[#c5a880] text-[#090b0e] text-xs uppercase tracking-[0.15em] font-bold hover:bg-[#d8c19f] transition-colors"
+                    className="px-6 py-3 bg-[#c5a880] text-[#090b0e] text-xs uppercase tracking-[0.15em] font-bold hover:bg-[#d8c19f] transition-colors text-center shadow-lg"
                   >
                     Request Similar Estimation →
                   </button>

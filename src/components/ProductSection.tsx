@@ -1,348 +1,358 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   PRODUCT_CATEGORIES,
   TOILET_CUBICLE_SUBCATEGORIES
 } from '../data/websiteData';
 import { ProductSubcategory } from '../types';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowUpRight, Layers, Sparkles } from 'lucide-react';
 
 interface ProductSectionProps {
   onSelectSubcategory: (sub: ProductSubcategory) => void;
   onRequestQuote: (productName: string) => void;
 }
 
+type CatalogViewMode = 'categories' | 'series';
+
 export const ProductSection: React.FC<ProductSectionProps> = ({
   onSelectSubcategory,
   onRequestQuote
 }) => {
-  // Selected subcategory index for dynamic catalogue showcase
-  const [activeSeriesIndex, setActiveSeriesIndex] = useState(0);
+  const [viewMode, setViewMode] = useState<CatalogViewMode>('categories');
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const activeSeries = TOILET_CUBICLE_SUBCATEGORIES[activeSeriesIndex];
+  const carouselRef = useRef<HTMLDivElement>(null);
 
-  // Primary categories from websiteData
-  const toiletCategory = PRODUCT_CATEGORIES.find(c => c.id === 'toilet-cubicles-partition')!;
-  const urinalCategory = PRODUCT_CATEGORIES.find(c => c.id === 'urinal-partition')!;
-  const showerCategory = PRODUCT_CATEGORIES.find(c => c.id === 'shower-cubicles')!;
-  const changingCategory = PRODUCT_CATEGORIES.find(c => c.id === 'changing-room')!;
-  const lockerCategory = PRODUCT_CATEGORIES.find(c => c.id === 'lockers')!;
-  const doorsCategory = PRODUCT_CATEGORIES.find(c => c.id === 'pole-door')!;
-  const utilityDoorCategory = PRODUCT_CATEGORIES.find(c => c.id === 'utility-door')!;
-  const accessoriesCategory = PRODUCT_CATEGORIES.find(c => c.id === 'toilet-cubicle-accessories')!;
-  const kitchenCategory = PRODUCT_CATEGORIES.find(c => c.id === 'modular-kitchen')!;
+  // Core system categories with clean counts/subtitles matching image.png style
+  const catalogItems = [
+    {
+      id: 'toilet-cubicles-partition',
+      name: 'Toilet Cubicles & Partitions',
+      subtitle: '15 Modular Series Available',
+      badge: 'Flagship Core',
+      imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80',
+      action: 'view-series'
+    },
+    {
+      id: 'urinal-partition',
+      name: 'Urinal Privacy Screens',
+      subtitle: 'Wall-Hung & Floor Anchored',
+      badge: 'CNC Radiused',
+      imageUrl: 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1000&q=80',
+      action: 'quote'
+    },
+    {
+      id: 'shower-cubicles',
+      name: 'Shower Wet Area Cubicles',
+      subtitle: '100% Steam & Moisture Proof',
+      badge: 'Watertight',
+      imageUrl: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1000&q=80',
+      action: 'quote'
+    },
+    {
+      id: 'changing-room',
+      name: 'Changing Room Suites',
+      subtitle: 'Modular Benches & Partitions',
+      badge: 'Heavy Footfall',
+      imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1000&q=80',
+      action: 'quote'
+    },
+    {
+      id: 'lockers',
+      name: 'Phenolic Lockers',
+      subtitle: '1 to 6-Tier Electronic Units',
+      badge: 'Anti-Vandal',
+      imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80',
+      action: 'quote'
+    },
+    {
+      id: 'pole-door',
+      name: 'Pole & Utility Doors',
+      subtitle: 'Floor-to-Ceiling Structural Pivots',
+      badge: 'Heavy Duty',
+      imageUrl: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1000&q=80',
+      action: 'quote'
+    },
+    {
+      id: 'toilet-cubicle-accessories',
+      name: 'Restroom Hardware & Fittings',
+      subtitle: 'Grade 304 / 316 Stainless Steel',
+      badge: '500k Cycles',
+      imageUrl: 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1000&q=80',
+      action: 'quote'
+    },
+    {
+      id: 'modular-kitchen',
+      name: 'Modular Pantries & Vanities',
+      subtitle: 'Solid Phenolic Moisture Resistant',
+      badge: 'Commercial',
+      imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1000&q=80',
+      action: 'quote'
+    }
+  ];
+
+  // Scroll handlers for circular arrows
+  const checkScrollPosition = () => {
+    if (carouselRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+
+      const cardWidth = 320;
+      const index = Math.round(scrollLeft / cardWidth);
+      setCurrentIndex(index);
+    }
+  };
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const cardWidth = 340;
+      const scrollAmount = direction === 'left' ? -cardWidth : cardWidth;
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const handleCardClick = (item: typeof catalogItems[0]) => {
+    if (item.action === 'view-series') {
+      setViewMode('series');
+      if (carouselRef.current) {
+        carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+      }
+    } else {
+      onRequestQuote(item.name);
+    }
+  };
+
+  const handleSeriesCardClick = (series: ProductSubcategory) => {
+    onSelectSubcategory(series);
+  };
 
   return (
-    <section id="products" className="py-24 sm:py-32 bg-[#ffffff] text-[#121417]">
+    <section id="products" className="py-24 sm:py-32 bg-[#090b0e] text-white border-t border-b border-white/5 relative">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
-        {/* Section Header: Minimal & Editorial */}
-        <div className="max-w-3xl mb-16 sm:mb-20 space-y-4">
-          <div className="flex items-center space-x-3 text-xs uppercase tracking-[0.25em] text-[#a88a60] font-semibold">
-            <span className="w-8 h-px bg-[#a88a60]"></span>
-            <span>Architectural Systems</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#11141a] tracking-tight font-['Manrope']">
-            Product Catalogue
-          </h2>
-          <p className="text-gray-600 text-base sm:text-lg font-light leading-relaxed">
-            Engineered commercial partition systems, shower cubicles, locker suites, and architectural hardware designed to withstand demanding commercial footfalls.
-          </p>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* 1. DOMINANT FLAGSHIP SHOWCASE: TOILET CUBICLES & 15-SERIES EXPLORER       */}
-        {/* ========================================================================= */}
-        <div id="toilet-subcategories" className="scroll-mt-24 mb-24 pb-20 border-b border-black/10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            {/* Left Column: Large Dynamic Architectural Product Stage (60%) */}
-            <div className="lg:col-span-7 space-y-4">
-              <div className="relative aspect-[16/10] overflow-hidden bg-[#f0eee9]">
-                <img
-                  src={activeSeries.imageUrl}
-                  alt={activeSeries.name}
-                  className="w-full h-full object-cover object-center transition-all duration-700 ease-out"
-                />
-                <div className="absolute top-5 left-5 bg-[#121417]/90 backdrop-blur-sm text-white px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider">
-                  Series {String(activeSeriesIndex + 1).padStart(2, '0')} / {activeSeries.name}
-                </div>
+        {/* Main Grid: Clean Left Column Header + Right Cards Carousel */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+          {/* ========================================================================= */}
+          {/* LEFT COLUMN: Title, Subtext & System Switcher                              */}
+          {/* ========================================================================= */}
+          <div className="lg:col-span-4 xl:col-span-3 space-y-6 pt-2">
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 text-xs uppercase tracking-[0.25em] text-[#c5a880] font-semibold">
+                <span className="w-6 h-px bg-[#c5a880]"></span>
+                <span>Systems Archive</span>
               </div>
-
-              <div className="flex items-center justify-between pt-2 text-xs text-gray-500">
-                <span className="font-mono">Panel: {activeSeries.specifications.thickness} Compact Laminate</span>
-                <button
-                  onClick={() => onSelectSubcategory(activeSeries)}
-                  className="font-bold text-[#11141a] hover:text-[#a88a60] transition-colors flex items-center space-x-1"
-                >
-                  <span>View Technical Spec Sheet</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </button>
-              </div>
+              <h2 className="text-4xl sm:text-5xl lg:text-[50px] font-extrabold text-white tracking-tight font-['Manrope'] leading-[1.08]">
+                Product<br className="hidden sm:inline" /> Catalog
+              </h2>
+              <p className="text-gray-400 text-sm sm:text-base font-light leading-relaxed max-w-sm">
+                A wide selection of engineered compact laminate restroom partitions, shower cubicles, and sanitary systems for commercial architecture.
+              </p>
             </div>
 
-            {/* Right Column: Series Title & Elegant Interactive Series Index (40%) */}
-            <div className="lg:col-span-5 space-y-6">
-              <div>
-                <span className="text-xs uppercase tracking-[0.2em] font-mono text-[#a88a60] font-semibold">
-                  Flagship Category
-                </span>
-                <h3 className="text-2xl sm:text-4xl font-extrabold text-[#11141a] font-['Manrope'] mt-1 mb-2">
-                  {toiletCategory.name}
-                </h3>
-                <p className="text-sm text-gray-600 font-light leading-relaxed mb-4">
-                  {toiletCategory.fullDesc}
-                </p>
-              </div>
-
-              {/* Architectural Numbered Series List */}
-              <div className="border-t border-b border-black/10 divide-y divide-black/5 max-h-[360px] overflow-y-auto pr-2">
-                {TOILET_CUBICLE_SUBCATEGORIES.map((sub, index) => (
-                  <button
-                    key={sub.id}
-                    onClick={() => {
-                      setActiveSeriesIndex(index);
-                    }}
-                    onMouseEnter={() => setActiveSeriesIndex(index)}
-                    className={`w-full py-2.5 px-3 flex items-center justify-between text-left transition-colors ${
-                      activeSeriesIndex === index
-                        ? 'bg-[#f5f3ee] text-[#11141a] font-bold'
-                        : 'text-gray-600 hover:text-black hover:bg-black/[0.02]'
+            {/* Segmented Mode Selector matching Dark Luxury Theme */}
+            <div className="pt-2 space-y-2.5">
+              <span className="text-[11px] uppercase tracking-wider font-mono text-gray-500 block font-semibold">
+                Browse System Range
+              </span>
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-2">
+                <button
+                  onClick={() => {
+                    setViewMode('categories');
+                    if (carouselRef.current) carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+                  }}
+                  className={`px-4 py-3 text-xs uppercase tracking-wider font-bold text-left transition-all duration-200 rounded-[14px] flex items-center justify-between border ${
+                    viewMode === 'categories'
+                      ? 'bg-[#c5a880] text-[#090b0e] border-[#c5a880] shadow-lg font-bold'
+                      : 'bg-[#12151d] hover:bg-[#191d26] text-gray-300 hover:text-white border-white/10 font-medium'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2">
+                    <Layers className={`w-3.5 h-3.5 ${viewMode === 'categories' ? 'text-[#090b0e]' : 'text-[#c5a880]'}`} />
+                    <span>All Core Systems</span>
+                  </span>
+                  <span
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded ${
+                      viewMode === 'categories'
+                        ? 'bg-black/20 text-[#090b0e] font-bold'
+                        : 'bg-white/5 text-gray-400'
                     }`}
                   >
-                    <div className="flex items-center space-x-3">
-                      <span className="font-mono text-xs text-[#a88a60]">
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
-                      <span className="text-xs sm:text-sm font-medium font-['Manrope']">
-                        {sub.name}
-                      </span>
+                    8 Systems
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setViewMode('series');
+                    if (carouselRef.current) carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+                  }}
+                  className={`px-4 py-3 text-xs uppercase tracking-wider font-bold text-left transition-all duration-200 rounded-[14px] flex items-center justify-between border ${
+                    viewMode === 'series'
+                      ? 'bg-[#c5a880] text-[#090b0e] border-[#c5a880] shadow-lg font-bold'
+                      : 'bg-[#12151d] hover:bg-[#191d26] text-gray-300 hover:text-white border-white/10 font-medium'
+                  }`}
+                >
+                  <span className="flex items-center space-x-2">
+                    <Sparkles className={`w-3.5 h-3.5 ${viewMode === 'series' ? 'text-[#090b0e]' : 'text-[#c5a880]'}`} />
+                    <span>Toilet Cubicle 15 Series</span>
+                  </span>
+                  <span
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded ${
+                      viewMode === 'series'
+                        ? 'bg-black/20 text-[#090b0e] font-bold'
+                        : 'bg-white/5 text-gray-400'
+                    }`}
+                  >
+                    15 Models
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Helper Note */}
+            <div className="hidden lg:block pt-4 border-t border-white/10 text-xs text-gray-500 font-light leading-relaxed">
+              Click any card to inspect technical specifications, solid compact phenolic core thickness, or request custom BOQ pricing.
+            </div>
+          </div>
+
+          {/* ========================================================================= */}
+          {/* RIGHT COLUMN: 3-Column Tall Dark Rounded Cards + Navigation Controls       */}
+          {/* ========================================================================= */}
+          <div className="lg:col-span-8 xl:col-span-9 overflow-hidden">
+            {/* View Mode 1: Core System Categories */}
+            {viewMode === 'categories' && (
+              <div
+                ref={carouselRef}
+                onScroll={checkScrollPosition}
+                className="flex space-x-5 sm:space-x-6 overflow-x-auto pb-4 pt-1 scroll-smooth no-scrollbar scrollbar-none snap-x snap-mandatory"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {catalogItems.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    onClick={() => handleCardClick(item)}
+                    className="w-[280px] sm:w-[320px] shrink-0 snap-start group cursor-pointer"
+                  >
+                    {/* Tall Image Card with Dark Architectural Framing */}
+                    <div className="aspect-[3/4] sm:aspect-[4/5] rounded-[24px] sm:rounded-[28px] overflow-hidden bg-[#161a22] border border-white/10 group-hover:border-[#c5a880]/50 relative shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-300">
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out filter brightness-[0.88] contrast-[1.05] group-hover:brightness-100"
+                        loading="lazy"
+                      />
+                      {/* Subtle hover gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
+                        <span className="text-white text-xs font-bold uppercase tracking-wider flex items-center space-x-1">
+                          <span>{item.action === 'view-series' ? 'Explore 15 Series' : 'Request BOQ Specs'}</span>
+                          <ArrowUpRight className="w-4 h-4 text-[#c5a880]" />
+                        </span>
+                      </div>
                     </div>
 
-                    <span className="text-[11px] font-mono text-gray-400">
-                      {sub.specifications.hardware.split('(')[0]}
-                    </span>
-                  </button>
+                    {/* Clean Minimal Typography Matching Rest of Website */}
+                    <div className="mt-4 px-1 space-y-1">
+                      <h3 className="text-lg sm:text-xl font-bold text-white font-['Manrope'] tracking-tight group-hover:text-[#c5a880] transition-colors">
+                        {item.name}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-400 font-light">
+                        {item.subtitle}
+                      </p>
+                    </div>
+                  </div>
                 ))}
               </div>
+            )}
 
-              {/* Action */}
-              <div className="pt-2 flex items-center space-x-4">
-                <button
-                  onClick={() => onSelectSubcategory(activeSeries)}
-                  className="px-6 py-3 bg-[#11141a] hover:bg-[#252a33] text-white text-xs uppercase tracking-[0.15em] font-bold transition-colors"
-                >
-                  Explore {activeSeries.name}
-                </button>
-                <button
-                  onClick={() => onRequestQuote(activeSeries.name)}
-                  className="text-xs font-bold uppercase tracking-[0.15em] text-[#a88a60] hover:text-black transition-colors"
-                >
-                  Request BOQ Quote →
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* 2. ASYMMETRIC ARCHITECTURAL CATALOGUE: OTHER CATEGORIES                   */}
-        {/* ========================================================================= */}
-        <div className="space-y-24">
-          {/* Pair 1: Urinal Partitions (Dominant 60%) + Shower Cubicles (40%) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            {/* Urinal Partition: Large visual */}
-            <div className="lg:col-span-7 space-y-4 group">
-              <div className="aspect-[16/9] overflow-hidden bg-[#f0eee9]">
-                <img
-                  src={urinalCategory.imageUrl}
-                  alt={urinalCategory.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
-              </div>
-              <div className="flex justify-between items-baseline pt-2">
-                <div>
-                  <h4 className="text-xl sm:text-2xl font-bold text-[#11141a] font-['Manrope']">
-                    {urinalCategory.name}
-                  </h4>
-                  <p className="text-xs sm:text-sm text-gray-600 font-light mt-1 max-w-lg">
-                    {urinalCategory.fullDesc}
-                  </p>
-                </div>
-                <button
-                  onClick={() => onRequestQuote(urinalCategory.name)}
-                  className="text-xs uppercase tracking-[0.15em] font-bold text-[#a88a60] hover:text-black shrink-0 ml-4 inline-flex items-center space-x-1"
-                >
-                  <span>Inquire</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Shower Cubicle: Tall architectural framing */}
-            <div className="lg:col-span-5 space-y-4 group">
-              <div className="aspect-[4/5] overflow-hidden bg-[#f0eee9]">
-                <img
-                  src={showerCategory.imageUrl}
-                  alt={showerCategory.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
-              </div>
-              <div className="flex justify-between items-baseline pt-2">
-                <div>
-                  <h4 className="text-xl sm:text-2xl font-bold text-[#11141a] font-['Manrope']">
-                    {showerCategory.name}
-                  </h4>
-                  <p className="text-xs sm:text-sm text-gray-600 font-light mt-1">
-                    {showerCategory.fullDesc}
-                  </p>
-                </div>
-                <button
-                  onClick={() => onRequestQuote(showerCategory.name)}
-                  className="text-xs uppercase tracking-[0.15em] font-bold text-[#a88a60] hover:text-black shrink-0 ml-4 inline-flex items-center space-x-1"
-                >
-                  <span>Inquire</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Pair 2: Changing Rooms + Commercial Lockers */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            {/* Changing Rooms */}
-            <div className="lg:col-span-5 space-y-4 group">
-              <div className="aspect-[4/3] overflow-hidden bg-[#f0eee9]">
-                <img
-                  src={changingCategory.imageUrl}
-                  alt={changingCategory.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
-              </div>
-              <div className="flex justify-between items-baseline pt-2">
-                <div>
-                  <h4 className="text-xl sm:text-2xl font-bold text-[#11141a] font-['Manrope']">
-                    {changingCategory.name}
-                  </h4>
-                  <p className="text-xs sm:text-sm text-gray-600 font-light mt-1">
-                    {changingCategory.fullDesc}
-                  </p>
-                </div>
-                <button
-                  onClick={() => onRequestQuote(changingCategory.name)}
-                  className="text-xs uppercase tracking-[0.15em] font-bold text-[#a88a60] hover:text-black shrink-0 ml-4 inline-flex items-center space-x-1"
-                >
-                  <span>Inquire</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Lockers */}
-            <div className="lg:col-span-7 space-y-4 group">
-              <div className="aspect-[16/10] overflow-hidden bg-[#f0eee9]">
-                <img
-                  src={lockerCategory.imageUrl}
-                  alt={lockerCategory.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
-              </div>
-              <div className="flex justify-between items-baseline pt-2">
-                <div>
-                  <h4 className="text-xl sm:text-2xl font-bold text-[#11141a] font-['Manrope']">
-                    {lockerCategory.name}
-                  </h4>
-                  <p className="text-xs sm:text-sm text-gray-600 font-light mt-1 max-w-lg">
-                    {lockerCategory.fullDesc}
-                  </p>
-                </div>
-                <button
-                  onClick={() => onRequestQuote(lockerCategory.name)}
-                  className="text-xs uppercase tracking-[0.15em] font-bold text-[#a88a60] hover:text-black shrink-0 ml-4 inline-flex items-center space-x-1"
-                >
-                  <span>Inquire</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Trio: Architectural Doors, Accessories & Modular Kitchen */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 pt-8 border-t border-black/10">
-            {/* Pole Door & Utility Doors */}
-            <div className="space-y-4 group">
-              <div className="aspect-[4/3] overflow-hidden bg-[#f0eee9]">
-                <img
-                  src={doorsCategory.imageUrl}
-                  alt={`${doorsCategory.name} & ${utilityDoorCategory.name}`}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
-              </div>
-              <h4 className="text-lg font-bold text-[#11141a] font-['Manrope']">
-                {doorsCategory.name} & {utilityDoorCategory.name}
-              </h4>
-              <p className="text-xs text-gray-600 font-light leading-relaxed">
-                {doorsCategory.fullDesc}
-              </p>
-              <button
-                onClick={() => onRequestQuote('Pole & Utility Doors')}
-                className="text-xs uppercase tracking-[0.15em] font-bold text-[#a88a60] hover:text-black inline-flex items-center space-x-1"
+            {/* View Mode 2: All 15 Toilet Cubicle Series */}
+            {viewMode === 'series' && (
+              <div
+                ref={carouselRef}
+                onScroll={checkScrollPosition}
+                className="flex space-x-5 sm:space-x-6 overflow-x-auto pb-4 pt-1 scroll-smooth no-scrollbar scrollbar-none snap-x snap-mandatory"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                <span>Request Door Specs</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
+                {TOILET_CUBICLE_SUBCATEGORIES.map((series, idx) => (
+                  <div
+                    key={series.id}
+                    onClick={() => handleSeriesCardClick(series)}
+                    className="w-[280px] sm:w-[320px] shrink-0 snap-start group cursor-pointer"
+                  >
+                    {/* Tall Image Card with Dark Architectural Framing */}
+                    <div className="aspect-[3/4] sm:aspect-[4/5] rounded-[24px] sm:rounded-[28px] overflow-hidden bg-[#161a22] border border-white/10 group-hover:border-[#c5a880]/50 relative shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-300">
+                      <img
+                        src={series.imageUrl}
+                        alt={series.name}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out filter brightness-[0.88] contrast-[1.05] group-hover:brightness-100"
+                        loading="lazy"
+                      />
+                      {/* Number Tag */}
+                      <div className="absolute top-4 left-4 bg-black/75 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono font-bold text-[#c5a880] border border-white/10">
+                        Series {String(idx + 1).padStart(2, '0')}
+                      </div>
 
-            {/* Toilet Cubicle Accessories */}
-            <div className="space-y-4 group">
-              <div className="aspect-[4/3] overflow-hidden bg-[#f0eee9]">
-                <img
-                  src={accessoriesCategory.imageUrl}
-                  alt={accessoriesCategory.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
-              </div>
-              <h4 className="text-lg font-bold text-[#11141a] font-['Manrope']">
-                {accessoriesCategory.name}
-              </h4>
-              <p className="text-xs text-gray-600 font-light leading-relaxed">
-                {accessoriesCategory.fullDesc}
-              </p>
-              <button
-                onClick={() => onRequestQuote(accessoriesCategory.name)}
-                className="text-xs uppercase tracking-[0.15em] font-bold text-[#a88a60] hover:text-black inline-flex items-center space-x-1"
-              >
-                <span>Hardware Catalogue</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
+                        <span className="text-white text-xs font-bold uppercase tracking-wider flex items-center space-x-1">
+                          <span>View Spec Sheet</span>
+                          <ArrowUpRight className="w-4 h-4 text-[#c5a880]" />
+                        </span>
+                      </div>
+                    </div>
 
-            {/* Modular Kitchen */}
-            <div className="space-y-4 group">
-              <div className="aspect-[4/3] overflow-hidden bg-[#f0eee9]">
-                <img
-                  src={kitchenCategory.imageUrl}
-                  alt={kitchenCategory.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
+                    {/* Typography Below Image */}
+                    <div className="mt-4 px-1 space-y-1">
+                      <h3 className="text-lg sm:text-xl font-bold text-white font-['Manrope'] tracking-tight group-hover:text-[#c5a880] transition-colors">
+                        {series.name}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-400 font-light">
+                        {series.specifications.thickness} • {series.specifications.hardware.split('(')[0]}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <h4 className="text-lg font-bold text-[#11141a] font-['Manrope']">
-                {kitchenCategory.name}
-              </h4>
-              <p className="text-xs text-gray-600 font-light leading-relaxed">
-                {kitchenCategory.fullDesc}
-              </p>
-              <button
-                onClick={() => onRequestQuote(kitchenCategory.name)}
-                className="text-xs uppercase tracking-[0.15em] font-bold text-[#a88a60] hover:text-black inline-flex items-center space-x-1"
-              >
-                <span>Inquire Solutions</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+            )}
+
+            {/* Circular Arrow Navigation Controls */}
+            <div className="flex items-center justify-between pt-6 border-t border-white/10 mt-4">
+              <div className="text-xs font-mono text-gray-400">
+                {viewMode === 'categories' ? (
+                  <span>8 Primary Partition & Cubicle Systems</span>
+                ) : (
+                  <span>15 Architectural Toilet Series Available</span>
+                )}
+              </div>
+
+              {/* Circular < and > navigation buttons in Website Theme */}
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => handleScroll('left')}
+                  disabled={!canScrollLeft}
+                  className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
+                    canScrollLeft
+                      ? 'border-white/20 text-white hover:border-[#c5a880] hover:text-[#c5a880] hover:bg-white/5 cursor-pointer'
+                      : 'border-white/5 text-gray-600 cursor-not-allowed opacity-40'
+                  }`}
+                  aria-label="Previous products"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                <button
+                  onClick={() => handleScroll('right')}
+                  disabled={!canScrollRight}
+                  className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
+                    canScrollRight
+                      ? 'bg-[#c5a880] text-[#090b0e] border-[#c5a880] hover:bg-[#d8c19f] cursor-pointer shadow-lg'
+                      : 'border-white/5 text-gray-600 cursor-not-allowed opacity-40'
+                  }`}
+                  aria-label="Next products"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

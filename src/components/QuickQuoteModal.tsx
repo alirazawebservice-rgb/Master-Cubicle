@@ -32,6 +32,25 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = ({
     }
   }, [preselectedProduct]);
 
+  // Close modal on Escape key and lock body scroll
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,20 +61,28 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-[#11141a] border border-white/20 rounded-sm shadow-2xl overflow-hidden my-6">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200 cursor-pointer"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-2xl bg-[#11141a] border border-white/20 rounded-sm shadow-2xl overflow-hidden my-4 sm:my-6 cursor-default max-h-[92vh] flex flex-col"
+      >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0c0e12]">
-          <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-[#d4b483]"></span>
-            <span className="text-xs uppercase tracking-widest text-[#d4b483] font-mono font-semibold">
+        <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-white/10 bg-[#0c0e12] shrink-0">
+          <div className="flex items-center space-x-2 truncate pr-2">
+            <span className="w-2 h-2 rounded-full bg-[#d4b483] shrink-0"></span>
+            <span className="text-xs uppercase tracking-widest text-[#d4b483] font-mono font-semibold truncate">
               Fast Architectural Quote Request
             </span>
           </div>
           <button
             onClick={onClose}
             aria-label="Close quote modal"
-            className="p-1.5 text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded"
+            className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded transition-colors shrink-0"
           >
             <X className="w-5 h-5" />
           </button>

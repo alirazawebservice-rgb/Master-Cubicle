@@ -2,5 +2,7 @@
   "name": "Master Cubicle - Premium Commercial Washroom & Partition Solutions",
   "description": "Leading manufacturer and supplier of premium toilet cubicles, washroom partitions, urinal dividers, shower cubicles, changing rooms, and architectural locker systems.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

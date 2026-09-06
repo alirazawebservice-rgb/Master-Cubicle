@@ -6,9 +6,18 @@ import { ProductSubcategory } from '../types';
 interface NavbarProps {
   onOpenQuoteModal: (productName?: string) => void;
   onSelectProductSubcategory?: (sub: ProductSubcategory) => void;
+  currentView?: 'home' | 'gallery';
+  onNavigateToGalleryPage?: () => void;
+  onNavigateHome?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onSelectProductSubcategory }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  onOpenQuoteModal,
+  onSelectProductSubcategory,
+  currentView = 'home',
+  onNavigateToGalleryPage,
+  onNavigateHome
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProductsMegaOpen, setIsProductsMegaOpen] = useState(false);
@@ -24,6 +33,30 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onSelectProduc
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Handle Escape key to close mobile menu and mega menu
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+        setIsProductsMegaOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Prevent background scroll when mobile drawer is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   const handleSubcategoryClick = (sub: ProductSubcategory) => {
     setIsProductsMegaOpen(false);
@@ -81,7 +114,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onSelectProduc
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
           {/* Logo */}
-          <a href="#" className="flex items-center space-x-3 group">
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              if (onNavigateHome) onNavigateHome();
+              else window.location.hash = '';
+            }}
+            className="flex items-center space-x-3 group"
+          >
             <div className="w-10 h-10 rounded-sm bg-gradient-to-br from-[#1a1e26] to-[#0f1217] border border-[#c5a880]/30 flex items-center justify-center p-2 group-hover:border-[#c5a880] transition-colors shadow-inner">
               <div className="w-full h-full border border-[#c5a880]/60 flex flex-col justify-between p-0.5">
                 <div className="w-full h-0.5 bg-[#c5a880]"></div>
@@ -103,7 +144,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onSelectProduc
           <nav className="hidden lg:flex items-center space-x-7 text-sm font-medium">
             <a
               href="#"
-              className="text-gray-300 hover:text-white transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                if (onNavigateHome) onNavigateHome();
+                else window.location.hash = '';
+              }}
+              className={`${
+                currentView === 'home' ? 'text-[#d4b483] font-semibold' : 'text-gray-300 hover:text-white'
+              } transition-colors`}
             >
               Home
             </a>
@@ -232,12 +280,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onSelectProduc
             >
               Projects
             </a>
-            <a
-              href="#gallery"
-              className="text-gray-300 hover:text-white transition-colors"
+            <button
+              onClick={() => {
+                if (currentView === 'home') {
+                  const elem = document.getElementById('gallery');
+                  if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+                  else if (onNavigateToGalleryPage) onNavigateToGalleryPage();
+                } else {
+                  if (onNavigateToGalleryPage) onNavigateToGalleryPage();
+                }
+              }}
+              className={`${
+                currentView === 'gallery'
+                  ? 'text-[#d4b483] font-semibold'
+                  : 'text-gray-300 hover:text-white'
+              } transition-colors`}
             >
               Gallery
-            </a>
+            </button>
             <a
               href="#contact"
               className="text-gray-300 hover:text-white transition-colors"
@@ -298,7 +358,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onSelectProduc
           <div className="flex flex-col space-y-5 text-base">
             <a
               href="#"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsMobileMenuOpen(false);
+                if (onNavigateHome) onNavigateHome();
+                else window.location.hash = '';
+              }}
               className="text-white hover:text-[#d4b483] font-medium py-2 border-b border-white/5"
             >
               Home
@@ -343,13 +408,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuoteModal, onSelectProduc
             >
               Our Projects
             </a>
-            <a
-              href="#gallery"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-white hover:text-[#d4b483] font-medium py-2 border-b border-white/5"
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                if (onNavigateToGalleryPage) onNavigateToGalleryPage();
+              }}
+              className="text-left w-full text-white hover:text-[#d4b483] font-medium py-2 border-b border-white/5 flex items-center justify-between"
             >
-              Visual Gallery
-            </a>
+              <span>Visual Gallery</span>
+              <span className="text-[11px] font-mono text-[#c5a880] uppercase">19+ Photos →</span>
+            </button>
             <a
               href="#contact"
               onClick={() => setIsMobileMenuOpen(false)}

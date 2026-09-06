@@ -34,6 +34,28 @@
   letter-spacing: -0.03em;
 }
 
+/* Auto-sliding single-line marquee keyframe */
+@keyframes autoSlideHorizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-auto-slide {
+  display: flex;
+  width: max-content;
+  animation: autoSlideHorizontal 28s linear infinite;
+  will-change: transform;
+}
+
+.animate-auto-slide:hover,
+.animate-auto-slide.paused {
+  animation-play-state: paused;
+}
+
 /* Custom minimal scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

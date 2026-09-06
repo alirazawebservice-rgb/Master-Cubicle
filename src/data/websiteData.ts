@@ -780,11 +780,12 @@ export const CLIENTS: ClientLogo[] = [
 ];
 
 export const GALLERY_ITEMS: GalleryItem[] = [
+  // 1. Toilet Cubicles & Partitions
   {
     id: 'g1',
     title: 'Stainless Steel Series Restroom Cubicles',
     category: 'Toilet Cubicles',
-    imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1400&q=85',
     location: 'Corporate HQ, Navi Mumbai',
     caption: '12mm Compact Laminate in Charcoal Grey with SS 304 brushed satin hardware.'
   },
@@ -792,55 +793,31 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: 'g2',
     title: 'Ceiling Hung Floating Washroom Partitions',
     category: 'Toilet Cubicles',
-    imageUrl: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1400&q=85',
     location: 'Luxury Airport Lounge',
     caption: 'Cantilever overhead suspension providing zero ground interference for effortless maintenance.'
-  },
-  {
-    id: 'g3',
-    title: 'Architectural Urinal Divider Screens',
-    category: 'Urinal Partitions',
-    imageUrl: 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1200&q=80',
-    location: 'Shopping Mall Restrooms',
-    caption: 'Radiused safety corners with heavy-duty wall-mounted clamp brackets.'
   },
   {
     id: 'g4',
     title: 'Seamless Series Zero-Sightline Executive Stalls',
     category: 'Toilet Cubicles',
-    imageUrl: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1400&q=85',
     location: 'Five-Star Hotel Suite',
     caption: '18mm rebated interlocking edges delivering total visual acoustic privacy.'
-  },
-  {
-    id: 'g5',
-    title: 'Solid Phenolic 2-Tier Lockers',
-    category: 'Changing Rooms & Lockers',
-    imageUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80',
-    location: 'Sports & Fitness Club',
-    caption: 'Waterproof compact laminate locker units with electronic numeric locks and ventilation slits.'
   },
   {
     id: 'g6',
     title: 'Elegance Series Natural Woodgrain Finish',
     category: 'Toilet Cubicles',
-    imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85',
     location: 'Executive Dining & Club',
     caption: 'Warm textured timber laminate combined with dark architectural accents.'
-  },
-  {
-    id: 'g7',
-    title: 'Grade 304 SS Indicator Lock & Gravity Hinge Detailing',
-    category: 'Hardware Details',
-    imageUrl: 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1200&q=80',
-    location: 'Factory Precision Test',
-    caption: 'Precision engineered emergency release occupancy indicator and self-closing gravity hinge.'
   },
   {
     id: 'g8',
     title: 'Kids Anti-Finger-Trap Restroom Cubicles',
     category: 'Toilet Cubicles',
-    imageUrl: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=1400&q=85',
     location: 'International Primary School',
     caption: 'Reduced 1300mm height with anti-pinch hinge buffers and bright hygienic laminates.'
   },
@@ -848,8 +825,120 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: 'g9',
     title: 'Glass Partition Cubicles with SS 316 Fittings',
     category: 'Toilet Cubicles',
-    imageUrl: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1400&q=85',
     location: 'Boutique Design Center',
     caption: 'Toughened ceramic frit opaque glass paired with precision marine grade stainless hardware.'
+  },
+  {
+    id: 'g10',
+    title: 'Athena Commercial High-Traffic Restroom Stalls',
+    category: 'Toilet Cubicles',
+    imageUrl: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1400&q=85',
+    location: 'Mindspace Corporate Park',
+    caption: 'Heavy-duty 12mm solid phenolic core with structural top rail stabilization.'
+  },
+
+  // 2. Urinal Partitions
+  {
+    id: 'g3',
+    title: 'Architectural Urinal Divider Screens',
+    category: 'Urinal Partitions',
+    imageUrl: 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1400&q=85',
+    location: 'Shopping Mall Restrooms',
+    caption: 'Radiused safety corners with heavy-duty wall-mounted clamp brackets.'
+  },
+  {
+    id: 'g11',
+    title: 'Wall-Hung Compact Grade Urinal Privacy Screens',
+    category: 'Urinal Partitions',
+    imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=85',
+    location: 'Bespoke Restaurant Lounge',
+    caption: 'Water-impervious solid phenolic panels with chamfered CNC-beveled edges.'
+  },
+  {
+    id: 'g12',
+    title: 'Floor-Anchored Heavy-Duty Urinal Partitions',
+    category: 'Urinal Partitions',
+    imageUrl: 'https://images.unsplash.com/photo-1519567241046-7f570eee3ce6?auto=format&fit=crop&w=1400&q=85',
+    location: 'Transit Station Restroom Pod',
+    caption: 'Dual wall-and-floor mounted stainless brackets for high-vibration stability.'
+  },
+
+  // 3. Shower Cubicles
+  {
+    id: 'g13',
+    title: '100% Waterproof Solid Phenolic Shower Cubicles',
+    category: 'Shower Cubicles',
+    imageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb186c5f8?auto=format&fit=crop&w=1400&q=85',
+    location: 'Wellness Health Club, Mumbai',
+    caption: 'Impermeable phenolic shower partitions engineered to withstand direct high-pressure waterjets.'
+  },
+  {
+    id: 'g14',
+    title: 'Commercial Poolside Shower Enclosure Suites',
+    category: 'Shower Cubicles',
+    imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85',
+    location: 'Sports & Aquatic Center',
+    caption: 'Anti-fungal, steam-resistant enclosures with integrated drainage clearance.'
+  },
+  {
+    id: 'g15',
+    title: 'Architectural Frosted Glass Shower Stalls',
+    category: 'Shower Cubicles',
+    imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1400&q=85',
+    location: 'Luxury Hotel Fitness Suite',
+    caption: 'Toughened frosted safety glass with AISI 316 marine-grade perimeter clamping.'
+  },
+
+  // 4. Changing Rooms & Lockers
+  {
+    id: 'g5',
+    title: 'Solid Phenolic 2-Tier Waterproof Lockers',
+    category: 'Changing Rooms & Lockers',
+    imageUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1400&q=85',
+    location: 'Sports & Fitness Club',
+    caption: 'Waterproof compact laminate locker units with electronic numeric locks and ventilation slits.'
+  },
+  {
+    id: 'g16',
+    title: 'Commercial Changing Cabins with Integrated Benches',
+    category: 'Changing Rooms & Lockers',
+    imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1400&q=85',
+    location: 'Athletic Training Complex',
+    caption: 'Heavy-duty privacy changing cubicles with matching phenolic bench seating.'
+  },
+  {
+    id: 'g17',
+    title: 'Z-Locker Phenolic Storage System',
+    category: 'Changing Rooms & Lockers',
+    imageUrl: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1400&q=85',
+    location: 'Corporate Wellness Center',
+    caption: 'Optimized space-saving Z-shape locker compartments allowing hanging garments and footwear.'
+  },
+
+  // 5. Architectural Hardware & Details
+  {
+    id: 'g7',
+    title: 'Grade 304 SS Indicator Lock & Gravity Hinge Detailing',
+    category: 'Hardware Details',
+    imageUrl: 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1400&q=85',
+    location: 'Factory Precision Test',
+    caption: 'Precision engineered emergency release occupancy indicator and self-closing gravity hinge.'
+  },
+  {
+    id: 'g18',
+    title: 'Adjustable SS 304 Pedestal Foot & Floor Mounting',
+    category: 'Hardware Details',
+    imageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=85',
+    location: 'Structural Engineering Review',
+    caption: 'Corrosion-resistant adjustable floor leg supporting 100mm-150mm janitorial floor clearance.'
+  },
+  {
+    id: 'g19',
+    title: 'Heavy-Duty Top Headrail & Corner Channel Jointing',
+    category: 'Hardware Details',
+    imageUrl: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1400&q=85',
+    location: 'Assembly Works, Kharghar',
+    caption: 'Anodized aluminium D-section headrail providing overhead structural rigidity across multiple stalls.'
   }
 ];
